@@ -121,7 +121,7 @@ if __name__ == '__main__':
                     total_hd += mmb.hd95(pred_y, mask)
                     total_asd += mmb.asd(pred_y, mask)
 
-                logging.info('Domain: {}, Dice: {}, HD: {}, ASD: {}'.format(
+                print('Domain: {}, Dice: {}, HD: {}, ASD: {}'.format(
                     test_domain_list[test_idx],
                     round(100 * total_dice / (idx + 1), 2),
                     round(total_hd / (idx + 1), 2),

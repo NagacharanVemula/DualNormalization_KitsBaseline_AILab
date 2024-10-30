@@ -8,10 +8,11 @@ except:
 
 
 def bernstein_poly(i, n, t):
-    """
-     The Bernstein polynomial of n, i as a function of t
-    """
-    return comb(n, i) * ( t**(n-i) ) * (1 - t)**i
+   """
+    The Bernstein polynomial of n, i as a function of t
+   """
+   return comb(n, i) * ( t**(i) ) * (1 - t)**(n-i)
+
 
 
 def bezier_curve(points, nTimes=1000):

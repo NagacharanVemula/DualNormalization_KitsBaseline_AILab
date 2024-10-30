@@ -4,11 +4,12 @@ import os
 import SimpleITK as sitk
 from bezier_curve import bezier_curve
 from tqdm import tqdm
+import pickle as pkl
 
-modality_name_list = {'t1': '_t1.nii', 
-                      't1ce': '_t1ce.nii', 
-                      't2': '_t2.nii', 
-                      'flair': '_flair.nii'}
+modality = "KiTS"
+
+with open('/mnt/storage/ramon_data_curations/tutorials/segmentation_tutorial/kits23_dset.pkl','rb') as f: 
+    tr, val, ts = pkl.load(f)
 
 def resize_image_itk(itkimage, newSize, resamplemethod=sitk.sitkNearestNeighbor):
     resampler = sitk.ResampleImageFilter()
@@ -29,91 +30,153 @@ def resize_image_itk(itkimage, newSize, resamplemethod=sitk.sitkNearestNeighbor)
 def save_img(slice, label, dir):
     np.savez_compressed(dir, image=slice, label=label)
 
-def norm(slices):
-    max = np.max(slices)
-    min = np.min(slices)
-    slices = 2 * (slices - min) / (max - min) - 1
-    return slices
 
-def nonlinear_transformation(slices):
+def norm(vol_s):
+   vol_s[vol_s>=300]=300
+   vol_s[vol_s<=-100]=-100
+   max = np.max(vol_s)
+   min = np.min(vol_s)
+   slices = 2 * (vol_s - min) / (max - min) - 1
+   return slices
 
-    points_1 = [[-1, -1], [-1, -1], [1, 1], [1, 1]]
-    xvals_1, yvals_1 = bezier_curve(points_1, nTimes=100000)
-    xvals_1 = np.sort(xvals_1)
+def nonlinear_transformation(x, p0 = [-1,-1],p3=[1,1],p1=[0.25,0.25],p2=[0.75,0.75],times_mod=100000):
+   points = [p0, p1, p2, p3]
+   xvals, yvals = bezier_curve(points, nTimes=times_mod)
+   xvals, yvals = np.sort(xvals), yvals
+   nonlinear_x = np.interp(x, xvals, yvals)
+   return nonlinear_x
 
-    nonlinear_slices_1 = np.interp(slices, xvals_1, yvals_1)
-    nonlinear_slices_1[nonlinear_slices_1 == 1] = -1
-
-    return slices, nonlinear_slices_1
 
 
 def save_test_npz(data_root, modality, target_root):
-    list_dir = os.listdir(data_root)
-    tbar = tqdm(list_dir, ncols=70)
+    # list_dir = os.listdir(data_root)
+    dset_2 = data_root
+    tbar = tqdm(dset_2, ncols=70)
     count = 0
-
+    # count_sample = 0
     for name in tbar:
-        nib_img = nib.load(os.path.join(data_root, name, name + modality_name_list[modality]))
-        nib_mask = nib.load(os.path.join(data_root, name, name + '_seg.nii'))
+        nib_img = nib.load(name["image"])
+        nib_mask = nib.load(name["label"])
 
         affine = nib_img.affine.copy()
         
         slices = nib_img.get_fdata()
         masks = nib_mask.get_fdata()
-        masks[masks != 0] = 1
+        masks =  np.where((masks == 0) | (masks == 1), masks, 0)
 
-        slices = norm(slices)
+        
 
         if not os.path.exists(os.path.join(target_root, modality)):
             os.makedirs(os.path.join(target_root, modality))
         
-        for i in range(slices.shape[2]):
-            save_img(slices[:, :, i], masks[:, :, i], os.path.join(target_root, modality, 'test_sample{}.npz'.format(count)))
+        for i in range(slices.shape[0]):
+            slice = norm(slices[i,:,:])
+            mask = masks[i,:,:]
+            save_img(slice, mask, os.path.join(target_root, modality, 'val_sample{}.npz'.format(count)))
             count += 1
+        
+        # count_sample+=1
+        # if count_sample==2:
+        #     break
+
+
+
+
 
 def main(data_root, modality, target_root):
-    list_dir = os.listdir(data_root)
-    tbar = tqdm(list_dir, ncols=70)
+    # list_dir = os.listdir(data_root)
+    dset_1 = data_root
+    tbar = tqdm(dset_1, ncols=70)
     count = 0
+    # count_sample = 0
     for name in tbar:
-        nib_img = nib.load(os.path.join(data_root, name, name + modality_name_list[modality]))
-        nib_mask = nib.load(os.path.join(data_root, name, name + '_seg.nii'))
+        nib_img = nib.load(name["image"])
+        nib_mask = nib.load(name["label"])
         
         affine = nib_img.affine.copy()
         
         slices = nib_img.get_fdata()
         masks = nib_mask.get_fdata()
-        masks[masks != 0] = 1
+        masks =  np.where((masks == 0) | (masks == 1), masks, 0)
+        # masks[masks != 0] = 1
 
-        slices = norm(slices)
+        # slices = norm(slices)
 
-        slices, nonlinear_slices_1 = nonlinear_transformation(slices)
+        # slices, nonlinear_slices_1 = nonlinear_transformation(slices)
 
         if not os.path.exists(os.path.join(target_root, modality + '_ss')):
             os.makedirs(os.path.join(target_root, modality + '_ss'))
         if not os.path.exists(os.path.join(target_root, modality + '_sd')):
             os.makedirs(os.path.join(target_root, modality + '_sd'))
+        
+        v1 = 0.25
+        v2 = 0.75
 
-        for i in range(slices.shape[2]):
+        for i in range(slices.shape[0]):
+            slice = norm(slices[i,:,:])
+            mask = masks[i,:,:]
+            kidney_mask = mask ==1
+
             """
             Source-Similar
             """
-            save_img(slices[:, :, i], masks[:, :, i], os.path.join(target_root, modality + '_ss', 'sample{}_0.npz'.format(count)))
+            mod_kidney = nonlinear_transformation(slice[kidney_mask],p0 = [-1,-1,],p1=[-1,-1],p2=[1,1],p3 =[1,1])
+            new_kidney_1 = np.copy(slice)
+            new_kidney_1[kidney_mask]= mod_kidney
+
+            mod_kidney = nonlinear_transformation(slice[kidney_mask],p0 = [-1,-1,],p1=[-v1,v1],p2=[v1,-v1],p3 = [1,1])
+            new_kidney_2 = np.copy(slice)
+            new_kidney_2[kidney_mask]= mod_kidney
+
+            mod_kidney = nonlinear_transformation(slice[kidney_mask],p0 = [-1,-1,],p1=[-v2,v2],p2=[v2,-v2],p3 = [1,1])
+            new_kidney_3 = np.copy(slice)
+            new_kidney_3[kidney_mask]= mod_kidney
+
             """
             Source-Dissimilar
             """
-            save_img(nonlinear_slices_1[:, :, i], masks[:, :, i], os.path.join(target_root, modality + '_sd', 'sample{}_0.npz'.format(count)))
+            mod_kidney = nonlinear_transformation(slice[kidney_mask],p0 = [1,1,],p1=[1,1],p2=[-1,-1],p3 = [-1,-1])
+            new_kidney_4 = np.copy(slice)
+            new_kidney_4[kidney_mask]= mod_kidney
+
+            mod_kidney = nonlinear_transformation(slice[kidney_mask],p0 = [1,1,],p1=[v1,-v1],p2=[-v1,v1],p3 = [-1,-1])
+            new_kidney_5 = np.copy(slice)
+            new_kidney_5[kidney_mask]= mod_kidney
+
+            mod_kidney = nonlinear_transformation(slice[kidney_mask],p0 = [1,1,],p1=[v2,-v2],p2=[-v2,v2],p3 = [-1,-1])
+            new_kidney_6 = np.copy(slice)
+            new_kidney_6[kidney_mask]= mod_kidney
+
+
+
+            save_img(new_kidney_1, mask, os.path.join(target_root, modality + '_ss', 'sample{}.npz'.format(count)))
+            save_img(new_kidney_4, mask, os.path.join(target_root, modality + '_sd', 'sample{}.npz'.format(count)))
             count += 1
+
+            save_img(new_kidney_2, mask, os.path.join(target_root, modality + '_ss', 'sample{}.npz'.format(count)))
+            save_img(new_kidney_5, mask, os.path.join(target_root, modality + '_sd', 'sample{}.npz'.format(count)))
+            count += 1
+
+            save_img(new_kidney_3, mask, os.path.join(target_root, modality + '_ss', 'sample{}.npz'.format(count)))
+            save_img(new_kidney_6, mask, os.path.join(target_root, modality + '_sd', 'sample{}.npz'.format(count)))
+            count += 1
+
+        # count_sample+=1
+        # if count_sample==2:
+        #     break
+
 
 
 if __name__ == '__main__':
-    data_root = 'Your Nii Training Data Folder'
-    target_root = 'Your Npz Training Data Folder'
-    modality = 't2'
+    data_root = tr
+    target_root =  "/mnt/storage/charan/npz_data1/train/"
+    modality = 'KiTS'
     main(data_root, modality, target_root)
+    print("It's done")
 
-    data_root = 'Your Nii Test Data Folder'
-    target_root = 'Your Npz Test Data Folder'
-    modality_list = ['flair', 't1', 't1ce']
+    data_root = val
+    target_root = "/mnt/storage/charan/npz_data1/val/"
+    modality_list = ['KiTS']
     for modality in modality_list:
         save_test_npz(data_root, modality, target_root)
+    print("It's done")
