@@ -8,11 +8,11 @@ from PIL import Image
 from model.unetdsbn import Unet2D
 from utils.palette import color_map
 from datasets.dataset import Dataset, ToTensor, CreateOnehotLabel
-
+from test_utils import get_bn_statis, cal_distance
 import torch
 import torchvision.transforms as tfs
 from torch.nn import DataParallel
-from torch.nn import PairwiseDistance
+
 from torch.utils.data import DataLoader
 import logging
 
@@ -27,25 +27,6 @@ parser.add_argument('--save_label', dest='save_label', action='store_true')
 parser.add_argument('--label_dir', type=str,  default='./results/unet_dn', help='model_dir')
 parser.add_argument('--gpu_ids', type=str,  default='0', help='GPU to use')
 FLAGS = parser.parse_args()
-
-def get_bn_statis(model, domain_id):
-    means = []
-    vars = []
-    for name, param in model.state_dict().items():
-        if 'bns.{}.running_mean'.format(domain_id) in name:
-            means.append(param.clone())
-        elif 'bns.{}.running_var'.format(domain_id) in name:
-            vars.append(param.clone())
-    return means, vars
-
-
-def cal_distance(means_1, means_2, vars_1, vars_2):
-    pdist = PairwiseDistance(p=2)
-    dis = 0
-    for (mean_1, mean_2, var_1, var_2) in zip(means_1, means_2, vars_1, vars_2):
-        dis += (pdist(mean_1.reshape(1, mean_1.shape[0]), mean_2.reshape(1, mean_2.shape[0])) + pdist(var_1.reshape(1, var_1.shape[0]), var_2.reshape(1, var_2.shape[0])))
-    return dis.item()
-
 
 
 if __name__ == '__main__':

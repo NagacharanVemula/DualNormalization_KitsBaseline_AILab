@@ -11,6 +11,7 @@ modality = "KiTS"
 with open('/mnt/storage/ramon_data_curations/tutorials/segmentation_tutorial/kits23_dset.pkl','rb') as f: 
     tr, val, ts = pkl.load(f)
 
+
 def resize_image_itk(itkimage, newSize, resamplemethod=sitk.sitkNearestNeighbor):
     resampler = sitk.ResampleImageFilter()
     originSize = itkimage.GetSize()
@@ -168,8 +169,15 @@ def main(data_root, modality, target_root):
 
 
 if __name__ == '__main__':
+    print("Processing started!")
+    tr[64]["image"] = '/mnt/storage/charan/kits_resized/case_00425/imaging_resized.nii.gz'
+    tr[64]["label"] = '/mnt/storage/charan/kits_resized/case_00425/segmentation_resized.nii.gz'
+
+    tr[271]["image"] = '/mnt/storage/charan/kits_resized/case_00160/imaging_resized.nii.gz'
+    tr[271]["label"] = '/mnt/storage/charan/kits_resized/case_00160/segmentation_resized.nii.gz'
+
     data_root = tr
-    target_root =  "/mnt/storage/charan/npz_data1/train/"
+    target_root =  "/mnt/storage/charan/npz_data/train/"
     modality = 'KiTS'
     main(data_root, modality, target_root)
     print("It's done")

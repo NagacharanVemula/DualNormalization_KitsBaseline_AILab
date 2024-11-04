@@ -8,7 +8,7 @@ from tqdm import tqdm
 from model.unetdsbn import Unet2D
 from utils.loss import dice_loss1
 from datasets.dataset import Dataset, ToTensor, CreateOnehotLabel
-from test_dn_unet import get_bn_statis, cal_distance
+from test_utils import get_bn_statis, cal_distance
 import torch
 import torchvision.transforms as tfs
 from torch import optim
@@ -21,24 +21,72 @@ import copy
 import time
 from torch.utils.tensorboard import SummaryWriter
 
+def get_args():
+  
+    parser = argparse.ArgumentParser(description='Dual Normalization U-Net Training Script')
+    
+    # Data parameters
+    parser.add_argument('--data_dir', 
+                       type=str, 
+                       default='./data/brats/npz_data',
+                       help='Directory containing the training data')
+    
+    parser.add_argument("--train_domain_list_1", 
+                       nargs='+', 
+                       required=True,
+                       help='List of domains for first training set (e.g., KiTS_ss)')
+    
+    parser.add_argument("--train_domain_list_2", 
+                       nargs='+', 
+                       required=True,
+                       help='List of domains for second training set (e.g., KiTS_sd)')
+    
+    parser.add_argument('--result_dir', 
+                       type=str, 
+                       default='./results/unet_dn',
+                       help='Directory to save training results')
+    
+    # Model parameters
+    parser.add_argument('--n_classes', 
+                       type=int, 
+                       default=2,
+                       help='Number of segmentation classes')
+    
+    # Training parameters
+    parser.add_argument('--batch_size', 
+                       type=int, 
+                       default=64,
+                       help='Training batch size')
+    
+    parser.add_argument('--n_epochs', 
+                       type=int, 
+                       default=50,
+                       help='Number of training epochs')
+    
+    parser.add_argument('--lr', 
+                       type=float, 
+                       default=0.001,
+                       help='Learning rate')
+    
+    # System parameters
+    parser.add_argument('--seed', 
+                       type=int, 
+                       default=1337,
+                       help='Random seed for reproducibility')
+    
+    parser.add_argument('--gpu_ids', 
+                       type=str, 
+                       default='0,1',
+                       help='Comma-separated list of GPU IDs to use')
+    
+    parser.add_argument('--deterministic', 
+                       action='store_true',
+                       help='Enable deterministic training')
+    
+    args = parser.parse_args()
+    return args
 
-
-parser = argparse.ArgumentParser('Dual Normalization U-Net Training')
-parser.add_argument('--data_dir', type=str, default='./data/brats/npz_data')
-# parser.add_argument('--train_domain_list_1', nargs='+')
-# parser.add_argument('--train_domain_list_2', nargs='+')
-parser.add_argument('--result_dir', type=str, default='./results/unet_dn')
-parser.add_argument('--n_classes', type=int, default=2)
-parser.add_argument('--batch_size', type=int, default=16)
-parser.add_argument('--n_epochs', type=int, default=50)
-parser.add_argument('--save_step', type=int, default=10)
-parser.add_argument('--lr', type=float, default=0.001)
-parser.add_argument('--seed', type=int,  default=1337, help='random seed')
-parser.add_argument('--gpu_ids', type=str, default='0,1')
-parser.add_argument('--deterministic', dest='deterministic', action='store_true')
-args = parser.parse_args()
-
-
+args = get_args()
 
 def repeat_dataloader(iterable):
     """ repeat dataloader """
@@ -57,19 +105,16 @@ if __name__== '__main__':
     os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu_ids
     base_dir = args.data_dir
     batch_size = args.batch_size
-    save_step = args.save_step
     lr = args.lr
-    # train_domain_list_1 = args.train_domain_list_1
-    # train_domain_list_2 = args.train_domain_list_2
-    train_domain_list_1 = 'KiTS_ss'
-    train_domain_list_2 = 'KiTS_sd'
+    train_domain_list_1 = args.train_domain_list_1
+    train_domain_list_2 = args.train_domain_list_2
     max_epoch = args.n_epochs
     result_dir = args.result_dir
     n_classes = args.n_classes
     log_dir = os.path.join(result_dir, 'log')
     model_dir =  'model'
 
-    writer = SummaryWriter("runs/exp2_kits_DN")
+    writer = SummaryWriter("runs/exp_kits_DN")
 
 
     if args.deterministic:
@@ -143,6 +188,7 @@ if __name__== '__main__':
         epoch_loss = 0
         model.train()
         batch_loss = 0
+
         for i, batch in enumerate(dataloader_train[0]):
             ### get all domains' sample_batch ###
             sample_batches = [batch]
@@ -154,7 +200,7 @@ if __name__== '__main__':
             for train_idx in range(2):
                 count += 1
                 sample_data, sample_label = sample_batches[train_idx]['image'].cuda(), sample_batches[train_idx]['onehot_label'].cuda()
-                print("shapes of input batch and masks:",sample_data.shape, sample_label.shape)
+                # print("shapes of input batch and masks:",sample_data.shape, sample_label.shape)
                 outputs_soft = model(sample_data, domain_label=train_idx*torch.ones(sample_data.shape[0], dtype=torch.long))
                 loss = dice_loss1(outputs_soft, sample_label)
                 total_loss += loss.item()
@@ -178,6 +224,7 @@ if __name__== '__main__':
         #Calculating the estimates of two domain specific batchnorms of the trained model
         means_list = []
         vars_list = []
+        
         for i in range(2):
             means, vars = get_bn_statis(model, i)
             means_list.append(means)
@@ -212,31 +259,20 @@ if __name__== '__main__':
                 model.eval()
                 output_selected = model(sample_data,  domain_label=selected_domain*torch.ones(sample_data.shape[0], dtype=torch.long) )
                 output = output_selected
-                print("output shape:", output.shape)
+      
                 pred_y = output.cpu().detach().numpy()
-                print("prediction shape:", pred_y.shape)
+
                 pred_y = np.argmax(pred_y, axis=1)
-                print("argmax prediction shape:", pred_y.shape)
 
-                if pred_y.sum() == 0 or mask.sum() == 0:
-                    total_dice += 0
-                    total_hd += 100
-                    total_asd += 100
-                else:
-                    total_dice += mmb.dc(pred_y, mask)
-                    total_hd += mmb.hd95(pred_y, mask)
-                    total_asd += mmb.asd(pred_y, mask)
+                total_dice += mmb.dc(pred_y, mask)
 
-                
 
             print('Mean Dice: {}, HD: {}, ASD: {}'.format(
-                round(total_dice / (idx + 1), 2),
-                round(total_hd / (idx + 1), 2),
-                round(total_asd / (idx + 1), 2)
+                round(total_dice / (idx + 1), 4)
             ))
             
 
-        epoch_mean_dice = round(total_dice / (idx + 1), 2)
+        epoch_mean_dice = round(total_dice / (idx + 1), 4)
         writer.add_scalar("Mean Dice/val", epoch_mean_dice, epoch_num)
         writer.flush()
 
