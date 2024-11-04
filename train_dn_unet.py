@@ -173,14 +173,10 @@ if __name__== '__main__':
 
 
 
-    total_dice = 0
-    total_hd = 0
-    total_asd = 0
-    dice_list = []
-    hd_list = []
-    asd_list = []
+
     
     best_mean_dice = -1
+    
     for epoch_num in range(max_epoch):
         data_iter = [repeat_dataloader(dataloader_train[i]) for i in range(2)]
         start_time = time.time()
@@ -232,8 +228,6 @@ if __name__== '__main__':
 
         
         total_dice = 0
-        total_hd = 0
-        total_asd = 0
 
         model_copy = copy.deepcopy(model)
         model_copy.train()   
