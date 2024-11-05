@@ -1,0 +1,5 @@
+nohup: ignoring input
+Training started!
+
+Modle's Params: 3.189M
+Epoch: 1, LR: 0.001

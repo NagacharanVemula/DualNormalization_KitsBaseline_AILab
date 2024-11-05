@@ -183,7 +183,7 @@ if __name__== '__main__':
         print('Epoch: {}, LR: {}'.format(epoch_num+1, round(exp_lr.get_last_lr()[0], 6)))
         epoch_loss = 0
         model.train()
-        batch_loss = 0
+        batch_loss_values = []
 
         for i, batch in enumerate(dataloader_train[0]):
             ### get all domains' sample_batch ###
@@ -192,20 +192,18 @@ if __name__== '__main__':
             sample_batches += other_sample_batches
 
             total_loss = 0
-            count = 0
             for train_idx in range(2):
-                count += 1
                 sample_data, sample_label = sample_batches[train_idx]['image'].cuda(), sample_batches[train_idx]['onehot_label'].cuda()
-                # print("shapes of input batch and masks:",sample_data.shape, sample_label.shape)
                 outputs_soft = model(sample_data, domain_label=train_idx*torch.ones(sample_data.shape[0], dtype=torch.long))
+                # print(outputs_soft.shape, sample_label.shape)
                 loss = dice_loss1(outputs_soft, sample_label)
                 total_loss += loss.item()
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
             
-            batch_loss+= (total_loss / count) 
-        epoch_loss = batch_loss / (i+1)
+            batch_loss_values.append(total_loss / 2) 
+        epoch_loss = np.mean(batch_loss_values)
         print("number of batches:", i+1)
         print(f"epoch-{epoch_num+1} - Average Loss:", epoch_loss)
         writer.add_scalar("Loss/train", epoch_loss, epoch_num)
@@ -258,10 +256,15 @@ if __name__== '__main__':
 
                 pred_y = np.argmax(pred_y, axis=1)
 
-                total_dice += mmb.dc(pred_y, mask)
+                if pred_y.sum() == 0 or mask.sum() == 0:
+
+                    total_dice += 0
+                else:
+
+                    total_dice += mmb.dc(pred_y, mask)
 
 
-            print('Mean Dice: {}, HD: {}, ASD: {}'.format(
+            print('Mean Dice: {}'.format(
                 round(total_dice / (idx + 1), 4)
             ))
             

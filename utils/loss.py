@@ -30,8 +30,9 @@ def dice_loss1(score, target):
         intersect = torch.sum(score[:, i, ...] * target[:, i, ...])
         z_sum = torch.sum(score[:, i, ...] )
         y_sum = torch.sum(target[:, i, ...] )
-        loss += (2 * intersect + smooth) / (z_sum + y_sum + smooth)
-    loss = 1 - loss * 1.0 / target.shape[1]
+        dice = (2 * intersect + smooth) / (z_sum + y_sum + smooth)
+        loss+= 1 - dice
+    loss = loss/target.shape[1]
 
     return loss
 
