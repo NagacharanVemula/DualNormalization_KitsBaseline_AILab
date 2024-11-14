@@ -39,13 +39,11 @@ from torch.nn import PairwiseDistance
 
 
 
-with open('/mnt/storage/ramon_data_curations/tutorials/segmentation_tutorial/kits23_dset.pkl','rb') as f: 
+data_interest= ""
+with open(data_interest,'rb') as f: 
     tr, val, ts = pkl.load(f)
 
 
-
-# with open('/mnt/storage/charan/data/stu_dset.pkl','rb') as f: 
-#     tr, val, ts = pkl.load(f)
 
 #Utils
 def get_bn_statis(model, domain_id):
@@ -131,30 +129,22 @@ for i in range(2):
     
 def predictor_wrapper1(data):
 
-    B, C, D, H, W = data.shape
-    data = data.reshape(-1, C, H, W)  
+    data = data.squeeze(-1) 
 
     domain_label = domain_id * torch.ones(data.shape[0], dtype=torch.long, device=data.device)
     
-    output = model_copy(data, domain_label=domain_label)
+    output = model_copy(data, domain_label=domain_label).unsqueeze(-1)
    
-    OUT_C = output.shape[1]
-    output = output.reshape(B, OUT_C, D, H, W)
-    
     return output
 
 
 def predictor_wrapper2(data):
 
-    B, C, D, H, W = data.shape
-    data = data.reshape(-1, C, H, W)  
-
+    data = data.squeeze(-1) 
     domain_label = selected_domain * torch.ones( data.shape[0], dtype=torch.long, device=data.device)
 
-    output = model(data, domain_label=domain_label)
+    output = model(data, domain_label=domain_label).unsqueeze(-1)
     
-    OUT_C = output.shape[1]
-    output = output.reshape(B, OUT_C, D, H, W)
     
     return output
 
@@ -175,7 +165,7 @@ with torch.no_grad():
     for idx, (batch) in enumerate(test_loader):
         model.train()      
     
-        sample_data = batch['image'].to(device)
+        sample_data = batch['image'] #Modification: sliding window handles sending things to gpu
 
         mask = batch['label']
         
@@ -183,7 +173,7 @@ with torch.no_grad():
         best_out = None
         for domain_id in range(2):
 
-            roi_size = (1,512, 512)
+            roi_size = (512, 512,1)
 
             #Forward pass to get the upated statistics
             output = sliding_window_inference(
@@ -207,10 +197,9 @@ with torch.no_grad():
                 dis = new_dis
 
         model_copy = copy.deepcopy(model)
-
         #Inference using the selcted domain
         model.eval()
-        roi_size = (1, 512, 512)
+        roi_size = (512, 512,1)
         
         output_selected = sliding_window_inference(
                 inputs=sample_data,  
@@ -225,6 +214,7 @@ with torch.no_grad():
         predicted_mask = torch.argmax(output_selected, dim=1).unsqueeze(1)
         
         dice_metric(y_pred=predicted_mask, y=mask)
+        print(dice_metric.get_buffer())
     
     metric = dice_metric.aggregate().item()
 
