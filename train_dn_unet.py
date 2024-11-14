@@ -60,7 +60,7 @@ def get_args():
     
     parser.add_argument('--n_epochs', 
                        type=int, 
-                       default=50,
+                       default=62,
                        help='Number of training epochs')
     
     parser.add_argument('--lr', 
@@ -101,7 +101,7 @@ def worker_init_fn(worker_id):
 
 
 if __name__== '__main__':
-    start_time1 = datetime.datetime.now()
+    start_time1 = time.time()
     os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu_ids
     base_dir = args.data_dir
     batch_size = args.batch_size
@@ -132,12 +132,14 @@ if __name__== '__main__':
 
     dataloader_train = []
     model = Unet2D(num_classes=n_classes, norm='dsbn', num_domains=2)
+    model.load_state_dict(torch.load("best_model_DN.pth")["model_dict"])
     params_num = sum(p.numel() for p in model.parameters())
     print("Training started!")
     print("\nModle's Params: %.3fM" % (params_num / 1e6))
     model = DataParallel(model).cuda()
 
     optimizer = Adam(params=model.parameters(), lr=lr, betas=(0.9, 0.999))
+    optimizer.load_state_dict(torch.load("best_model_DN.pth")["optimizer_dict"])
 
     exp_lr = optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.99)
 
@@ -268,6 +270,7 @@ if __name__== '__main__':
                 round(total_dice / (idx + 1), 4)
             ))
             
+            
 
         epoch_mean_dice = round(total_dice / (idx + 1), 4)
         writer.add_scalar("Mean Dice/val", epoch_mean_dice, epoch_num)
@@ -277,13 +280,21 @@ if __name__== '__main__':
         if epoch_mean_dice > best_mean_dice:
             best_mean_dice = epoch_mean_dice
             best_metric_epoch = epoch_num + 1
-            torch.save({"model_dict": model.module.state_dict(), "optimizer_dict": optimizer.state_dict()}, "best_model_DN.pth")
+            torch.save({"model_dict": model.module.state_dict(), "optimizer_dict": optimizer.state_dict()}, "best_model_DN_25.pth")
             print(f"Saved new best model at epoch {best_metric_epoch} with dice {best_mean_dice:.4f}")
 
+        if epoch_num+1 == max_epoch:
+            torch.save({"model_dict": model.module.state_dict(), "optimizer_dict": optimizer.state_dict()}, "best_model_DN_last.pth")
+
+        print(
+            f"\nbest mean dice: {best_mean_dice:.4f} "
+            f"at epoch: {best_metric_epoch}"
+        )
         print(f"Epoch duration: {time.time() - start_time:.2f} seconds")
 
-    end_time = datetime.datetime.now()
-    print('Finish running. Cost total time: {} hours'.format((end_time - start_time1).seconds / 3600))
+
+    # end_time = datetime.datetime.now()
+    print('Finish running. Cost total time: {} hours'.format((time.time() - start_time1).seconds / 3600))
     writer.close()
 
 

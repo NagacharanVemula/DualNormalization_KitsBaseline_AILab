@@ -1,0 +1,450 @@
+nohup: ignoring input
+Training started!
+
+Modle's Params: 3.189M
+Epoch: 1, LR: 0.000878
+number of batches: 12875
+epoch-1 - Average Loss: 0.006742931889098825
+Mean Dice: 0.7499
+Saved new best model at epoch 1 with dice 0.7499
+
+best mean dice: 0.7499 at epoch: 1
+Epoch duration: 4043.73 seconds
+Epoch: 2, LR: 0.000869
+number of batches: 12875
+epoch-2 - Average Loss: 0.006484048713758154
+Mean Dice: 0.8234
+Saved new best model at epoch 2 with dice 0.8234
+
+best mean dice: 0.8234 at epoch: 2
+Epoch duration: 4015.40 seconds
+Epoch: 3, LR: 0.00086
+number of batches: 12875
+epoch-3 - Average Loss: 0.006645274909954627
+Mean Dice: 0.829
+Saved new best model at epoch 3 with dice 0.8290
+
+best mean dice: 0.8290 at epoch: 3
+Epoch duration: 4051.69 seconds
+Epoch: 4, LR: 0.000851
+number of batches: 12875
+epoch-4 - Average Loss: 0.006261120003403969
+Mean Dice: 0.8429
+Saved new best model at epoch 4 with dice 0.8429
+
+best mean dice: 0.8429 at epoch: 4
+Epoch duration: 3997.82 seconds
+Epoch: 5, LR: 0.000843
+number of batches: 12875
+epoch-5 - Average Loss: 0.005898520971964864
+Mean Dice: 0.8602
+Saved new best model at epoch 5 with dice 0.8602
+
+best mean dice: 0.8602 at epoch: 5
+Epoch duration: 3984.11 seconds
+Epoch: 6, LR: 0.000835
+number of batches: 12875
+epoch-6 - Average Loss: 0.005814249766683116
+Mean Dice: 0.8434
+
+best mean dice: 0.8602 at epoch: 5
+Epoch duration: 3983.72 seconds
+Epoch: 7, LR: 0.000826
+number of batches: 12875
+epoch-7 - Average Loss: 0.005702236446362097
+Mean Dice: 0.8432
+
+best mean dice: 0.8602 at epoch: 5
+Epoch duration: 4166.64 seconds
+Epoch: 8, LR: 0.000818
+number of batches: 12875
+epoch-8 - Average Loss: 0.0056505121548198955
+Mean Dice: 0.8282
+
+best mean dice: 0.8602 at epoch: 5
+Epoch duration: 3992.10 seconds
+Epoch: 9, LR: 0.00081
+number of batches: 12875
+epoch-9 - Average Loss: 0.005422166191258477
+Mean Dice: 0.8288
+
+best mean dice: 0.8602 at epoch: 5
+Epoch duration: 3993.27 seconds
+Epoch: 10, LR: 0.000802
+number of batches: 12875
+epoch-10 - Average Loss: 0.005641232088931556
+Mean Dice: 0.8187
+
+best mean dice: 0.8602 at epoch: 5
+Epoch duration: 3990.27 seconds
+Epoch: 11, LR: 0.000794
+number of batches: 12875
+epoch-11 - Average Loss: 0.005285355308680858
+Mean Dice: 0.8278
+
+best mean dice: 0.8602 at epoch: 5
+Epoch duration: 3987.04 seconds
+Epoch: 12, LR: 0.000786
+number of batches: 12875
+epoch-12 - Average Loss: 0.005109877435906419
+Mean Dice: 0.6889
+
+best mean dice: 0.8602 at epoch: 5
+Epoch duration: 3985.08 seconds
+Epoch: 13, LR: 0.000778
+number of batches: 12875
+epoch-13 - Average Loss: 0.005130683027424859
+Mean Dice: 0.8475
+
+best mean dice: 0.8602 at epoch: 5
+Epoch duration: 3989.29 seconds
+Epoch: 14, LR: 0.00077
+number of batches: 12875
+epoch-14 - Average Loss: 0.004965899893381063
+Mean Dice: 0.8434
+
+best mean dice: 0.8602 at epoch: 5
+Epoch duration: 3988.94 seconds
+Epoch: 15, LR: 0.000762
+number of batches: 12875
+epoch-15 - Average Loss: 0.004915078122638961
+Mean Dice: 0.8187
+
+best mean dice: 0.8602 at epoch: 5
+Epoch duration: 3989.34 seconds
+Epoch: 16, LR: 0.000755
+number of batches: 12875
+epoch-16 - Average Loss: 0.004853519319330604
+Mean Dice: 0.8587
+
+best mean dice: 0.8602 at epoch: 5
+Epoch duration: 3987.17 seconds
+Epoch: 17, LR: 0.000747
+number of batches: 12875
+epoch-17 - Average Loss: 0.004840732311739505
+Mean Dice: 0.8607
+Saved new best model at epoch 17 with dice 0.8607
+
+best mean dice: 0.8607 at epoch: 17
+Epoch duration: 3989.61 seconds
+Epoch: 18, LR: 0.00074
+number of batches: 12875
+epoch-18 - Average Loss: 0.00464659487969667
+Mean Dice: 0.8333
+
+best mean dice: 0.8607 at epoch: 17
+Epoch duration: 3988.17 seconds
+Epoch: 19, LR: 0.000732
+number of batches: 12875
+epoch-19 - Average Loss: 0.004773609870845832
+Mean Dice: 0.8527
+
+best mean dice: 0.8607 at epoch: 17
+Epoch duration: 3989.67 seconds
+Epoch: 20, LR: 0.000725
+number of batches: 12875
+epoch-20 - Average Loss: 0.004469216373360273
+Mean Dice: 0.8589
+
+best mean dice: 0.8607 at epoch: 17
+Epoch duration: 3993.88 seconds
+Epoch: 21, LR: 0.000718
+number of batches: 12875
+epoch-21 - Average Loss: 0.004509160243191765
+Mean Dice: 0.8489
+
+best mean dice: 0.8607 at epoch: 17
+Epoch duration: 3992.51 seconds
+Epoch: 22, LR: 0.000711
+number of batches: 12875
+epoch-22 - Average Loss: 0.0044003478462256275
+Mean Dice: 0.8601
+
+best mean dice: 0.8607 at epoch: 17
+Epoch duration: 4016.63 seconds
+Epoch: 23, LR: 0.000703
+number of batches: 12875
+epoch-23 - Average Loss: 0.004261632588303205
+Mean Dice: 0.8531
+
+best mean dice: 0.8607 at epoch: 17
+Epoch duration: 3995.89 seconds
+Epoch: 24, LR: 0.000696
+number of batches: 12875
+epoch-24 - Average Loss: 0.004315717812880729
+Mean Dice: 0.8601
+
+best mean dice: 0.8607 at epoch: 17
+Epoch duration: 3994.84 seconds
+Epoch: 25, LR: 0.000689
+number of batches: 12875
+epoch-25 - Average Loss: 0.0041930278504936445
+Mean Dice: 0.8481
+
+best mean dice: 0.8607 at epoch: 17
+Epoch duration: 3986.64 seconds
+Epoch: 26, LR: 0.000683
+number of batches: 12875
+epoch-26 - Average Loss: 0.00416752041775046
+Mean Dice: 0.8401
+
+best mean dice: 0.8607 at epoch: 17
+Epoch duration: 3988.60 seconds
+Epoch: 27, LR: 0.000676
+number of batches: 12875
+epoch-27 - Average Loss: 0.004261735125652795
+Mean Dice: 0.8527
+
+best mean dice: 0.8607 at epoch: 17
+Epoch duration: 3985.18 seconds
+Epoch: 28, LR: 0.000669
+number of batches: 12875
+epoch-28 - Average Loss: 0.0040607355682595265
+Mean Dice: 0.8579
+
+best mean dice: 0.8607 at epoch: 17
+Epoch duration: 3996.09 seconds
+Epoch: 29, LR: 0.000662
+number of batches: 12875
+epoch-29 - Average Loss: 0.0039485922241673885
+Mean Dice: 0.8698
+Saved new best model at epoch 29 with dice 0.8698
+
+best mean dice: 0.8698 at epoch: 29
+Epoch duration: 3993.16 seconds
+Epoch: 30, LR: 0.000656
+number of batches: 12875
+epoch-30 - Average Loss: 0.003976769732040109
+Mean Dice: 0.8601
+
+best mean dice: 0.8698 at epoch: 29
+Epoch duration: 3981.40 seconds
+Epoch: 31, LR: 0.000649
+number of batches: 12875
+epoch-31 - Average Loss: 0.003783847573891427
+Mean Dice: 0.8747
+Saved new best model at epoch 31 with dice 0.8747
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3986.68 seconds
+Epoch: 32, LR: 0.000643
+number of batches: 12875
+epoch-32 - Average Loss: 0.003927719301390417
+Mean Dice: 0.8681
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3994.05 seconds
+Epoch: 33, LR: 0.000636
+number of batches: 12875
+epoch-33 - Average Loss: 0.004035920802829335
+Mean Dice: 0.8689
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3990.74 seconds
+Epoch: 34, LR: 0.00063
+number of batches: 12875
+epoch-34 - Average Loss: 0.003866108206869329
+Mean Dice: 0.8666
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3996.55 seconds
+Epoch: 35, LR: 0.000624
+number of batches: 12875
+epoch-35 - Average Loss: 0.0038234652917361954
+Mean Dice: 0.8614
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3988.81 seconds
+Epoch: 36, LR: 0.000617
+number of batches: 12875
+epoch-36 - Average Loss: 0.0037542302689506013
+Mean Dice: 0.8633
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3994.27 seconds
+Epoch: 37, LR: 0.000611
+number of batches: 12875
+epoch-37 - Average Loss: 0.0036543245824795325
+Mean Dice: 0.8621
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3980.53 seconds
+Epoch: 38, LR: 0.000605
+number of batches: 12875
+epoch-38 - Average Loss: 0.0035987390337638486
+Mean Dice: 0.8579
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3977.75 seconds
+Epoch: 39, LR: 0.000599
+number of batches: 12875
+epoch-39 - Average Loss: 0.00372825024544614
+Mean Dice: 0.8666
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3974.74 seconds
+Epoch: 40, LR: 0.000593
+number of batches: 12875
+epoch-40 - Average Loss: 0.0035439710455033384
+Mean Dice: 0.8622
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3982.93 seconds
+Epoch: 41, LR: 0.000587
+number of batches: 12875
+epoch-41 - Average Loss: 0.003595809754816074
+Mean Dice: 0.8619
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3993.58 seconds
+Epoch: 42, LR: 0.000581
+number of batches: 12875
+epoch-42 - Average Loss: 0.0035452205671847445
+Mean Dice: 0.8573
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3998.64 seconds
+Epoch: 43, LR: 0.000575
+number of batches: 12875
+epoch-43 - Average Loss: 0.003525680440143474
+Mean Dice: 0.8686
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3986.72 seconds
+Epoch: 44, LR: 0.00057
+number of batches: 12875
+epoch-44 - Average Loss: 0.003512961027691665
+Mean Dice: 0.8603
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3983.64 seconds
+Epoch: 45, LR: 0.000564
+number of batches: 12875
+epoch-45 - Average Loss: 0.003497653331571412
+Mean Dice: 0.8737
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3994.73 seconds
+Epoch: 46, LR: 0.000558
+number of batches: 12875
+epoch-46 - Average Loss: 0.0034493604504946367
+Mean Dice: 0.8715
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 4009.20 seconds
+Epoch: 47, LR: 0.000553
+number of batches: 12875
+epoch-47 - Average Loss: 0.003554956348196974
+Mean Dice: 0.8649
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3994.45 seconds
+Epoch: 48, LR: 0.000547
+number of batches: 12875
+epoch-48 - Average Loss: 0.0032976200893087295
+Mean Dice: 0.8713
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3994.66 seconds
+Epoch: 49, LR: 0.000542
+number of batches: 12875
+epoch-49 - Average Loss: 0.003315281953626466
+Mean Dice: 0.8697
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3998.17 seconds
+Epoch: 50, LR: 0.000536
+number of batches: 12875
+epoch-50 - Average Loss: 0.0032834823247298453
+Mean Dice: 0.8655
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3995.55 seconds
+Epoch: 51, LR: 0.000531
+number of batches: 12875
+epoch-51 - Average Loss: 0.0034012039610483115
+Mean Dice: 0.8645
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3992.53 seconds
+Epoch: 52, LR: 0.000526
+number of batches: 12875
+epoch-52 - Average Loss: 0.0033219777195199023
+Mean Dice: 0.8596
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3994.27 seconds
+Epoch: 53, LR: 0.00052
+number of batches: 12875
+epoch-53 - Average Loss: 0.0033401610527223754
+Mean Dice: 0.8626
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3993.62 seconds
+Epoch: 54, LR: 0.000515
+number of batches: 12875
+epoch-54 - Average Loss: 0.0032516614383864173
+Mean Dice: 0.8564
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3994.90 seconds
+Epoch: 55, LR: 0.00051
+number of batches: 12875
+epoch-55 - Average Loss: 0.003332267691788164
+Mean Dice: 0.8585
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3991.84 seconds
+Epoch: 56, LR: 0.000505
+number of batches: 12875
+epoch-56 - Average Loss: 0.0032116614221369176
+Mean Dice: 0.8636
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3994.61 seconds
+Epoch: 57, LR: 0.0005
+number of batches: 12875
+epoch-57 - Average Loss: 0.003153712866375747
+Mean Dice: 0.8643
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3987.77 seconds
+Epoch: 58, LR: 0.000495
+number of batches: 12875
+epoch-58 - Average Loss: 0.003158319402666925
+Mean Dice: 0.8668
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3983.57 seconds
+Epoch: 59, LR: 0.00049
+number of batches: 12875
+epoch-59 - Average Loss: 0.003127076367730076
+Mean Dice: 0.8713
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3980.11 seconds
+Epoch: 60, LR: 0.000485
+number of batches: 12875
+epoch-60 - Average Loss: 0.003091723405041741
+Mean Dice: 0.8644
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 4007.76 seconds
+Epoch: 61, LR: 0.00048
+number of batches: 12875
+epoch-61 - Average Loss: 0.003173345013729577
+Mean Dice: 0.8729
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 4045.50 seconds
+Epoch: 62, LR: 0.000475
+number of batches: 12875
+epoch-62 - Average Loss: 0.003153117871978908
+Mean Dice: 0.8605
+
+best mean dice: 0.8747 at epoch: 31
+Epoch duration: 3976.53 seconds
+Traceback (most recent call last):
+  File "/home/nagacharan/DNKiTS_baseline/Dual-Normalization/train_dn_unet.py", line 297, in <module>
+    print('Finish running. Cost total time: {} hours'.format((time.time() - start_time1).seconds / 3600))
+AttributeError: 'float' object has no attribute 'seconds'
